@@ -1,0 +1,16 @@
+{
+  "name": "hs-simulator",
+  "version": "1.0.0",
+  "description": "A simulator for a popular online cardgame",
+  "main": "src/main.js",
+  "scripts": {
+    "dev": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Folkert Niewijk",
+  "license": "ISC",
+  "dependencies": {
+    "json-loader": "^0.5.4",
+    "webpack": "^1.13.2"
+  }
+}

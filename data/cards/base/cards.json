@@ -1,0 +1,48 @@
+[
+    {
+        "id": 1,
+        "cost": 1,
+        "description" : "2/1 for 1 mana",
+        "type": "MINION",
+        "stats": {
+            "attack": "2",
+            "health": "1"
+        }
+    },
+    {
+        "id": 2,
+        "cost": 2,
+        "description" : "2/2 for 2 mana",
+        "type": "MINION",
+        "stats": {
+            "attack": "2",
+            "health": "2"
+        },
+        "events": [
+            {
+                "type": "ROUND_START",
+                "action": {
+                    "type": "ATTACK_INCREASE",
+                    "target": "SELF",
+                    "requirements": [
+                        {
+                            "type": "ON_BOARD"
+                        }
+                    ],
+                    "value": "1"
+                }
+
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "cost": 3,
+        "description" : "3/3 for 2 mana",
+        "type": "MINION",
+        "stats": {
+            "attack": "3",
+            "health": "3"
+        }
+    }
+]
