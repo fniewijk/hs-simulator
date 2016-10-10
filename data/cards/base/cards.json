@@ -5,8 +5,8 @@
         "description" : "2/1 for 1 mana",
         "type": "MINION",
         "stats": {
-            "attack": "2",
-            "health": "1"
+            "attack": 2,
+            "health": 1
         }
     },
     {
@@ -15,8 +15,8 @@
         "description" : "2/2 for 2 mana",
         "type": "MINION",
         "stats": {
-            "attack": "2",
-            "health": "2"
+            "attack": 2,
+            "health": 2
         },
         "events": [
             {
@@ -29,7 +29,7 @@
                             "type": "ON_BOARD"
                         }
                     ],
-                    "value": "1"
+                    "value": 1
                 }
 
             }
@@ -44,5 +44,59 @@
             "attack": "3",
             "health": "3"
         }
-    }
+    },
+    {
+        "id": 4,
+        "cost": 6,
+        "description" : "",
+        "type": "MINION",
+        "stats": {
+            "attack": 4,
+            "health": 4
+        },
+        "events": [
+            {
+                "type": "ROUND_START",
+                "action": {
+                    "type": "MANA_DECREASE",
+                    "target": "SELF",
+                    "requirements": [
+                        {
+                            "type": "IN_HAND"
+                        }
+                    ],
+                    "value": -1
+                }
+            }
+        ]
+
+    },
+    {
+        "id": 5,
+        "cost": 6,
+        "description" : "call me mist",
+        "type": "MINION",
+        "stats": {
+            "attack": 4,
+            "health": 4
+        },
+        "events": [
+            {
+                "type": "BATTLECRY",
+                "action": {
+                    "type": "BUFF",
+                    "target": [
+                        "MINIONS_DECK",
+                        "MINIONS_HAND"
+                    ],
+                    "stats": {
+                        "attack":1,
+                        "health":1
+                    }
+                }
+            }
+        ]
+
+    },
+
 ]
