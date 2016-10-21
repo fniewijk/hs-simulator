@@ -1,20 +1,23 @@
-module.export = class{
+const cardType = require('../types/cardType.js');
+const aspectTypes = require('../types/aspectTypes.js');
+
+module.exports = class{
 
     let health = 0;
+    let attack = 0;
     let aspectArray = [];
 
     constructor (config){
         const defaultConfig = {
-            aspects: {
-
-            }
+            aspects: []
         };
-        //config merge.
 
+        health = config.health;
+        attack = config.attack;
     }
 
     hit(points) {
-        if(!this.getAspect(aspectType.IMMUNE)){
+        if(!this.getAspect(aspectTypes.IMMUNE)){
             this.health -= points;
         }
 
@@ -29,11 +32,11 @@ module.export = class{
     }
 
     get targetAble() {
-        !(this.getAspect(aspectType.STEALTH) || !this.getAspect(aspectType.DEAD));
+        !(this.getAspect(aspectTypes.STEALTH) || !this.getAspect(aspectTypes.DEAD));
     }
 
     die() {
-        this.setAspect(aspectType.DEAD);
+        this.setAspect(aspectTypes.DEAD);
     }
 
     get Aspect(aspect) {

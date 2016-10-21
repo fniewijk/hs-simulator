@@ -44,76 +44,96 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
+	(function(){
+
+
+
 	const Game = __webpack_require__(1);
-	const Player = __webpack_require__(3);
-	const deckOne = __webpack_require__(4);
-	const deckTwo = __webpack_require__(5);
 
-	const CardLoader = __webpack_require__(6);
-	const cardSetTypes = __webpack_require__(8);
+	const deckOne = __webpack_require__(2);
+	const deckTwo = __webpack_require__(3);
 
+	const CardLoader = __webpack_require__(4);
+	const cardSetTypes = __webpack_require__(6);
+
+	const DemoPlayer = __webpack_require__(7);
 
 	const cardLoader = new CardLoader();
 
 	const config = {
-	    cards: cardLoader.getMinions(cardsSetType.ALL),
+	    cards: cardLoader.getSet(cardSetTypes.ALL),
 	    decks: [
 	        deckOne,
 	        deckTwo
+	    ],
+	    players: [
+	        DemoPlayer,
+	        DemoPlayer,
 	    ]
-	}
+	};
 
+	console.log('start game');
 	const game = new Game(config);
+
+
+	})();
 
 
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(module) {module.export = class{
+	const EventEmitter = __webpack_require__(10);
+	const gameEvents = __webpack_require__(13);
 
-	    constructor (decks){
-	        this.round = 0;
-	        //return the game.
+	module.exports = class{
 
-	        while(!participants.died && rounds <= 40) {
-	            this.nextRound(participants.changePlayer);
+	    constructor (config){
+	        this.gameState = {
+	            round: 0,
+	            player: 0,
+	            players: [
+	                new config.players[0]({
+	                    health: 30,
+	                    hand: config.decks[0].slice(0,3)
+	                }),
+	                new config.players[1]({
+	                    health: 30,
+	                    hand: config.decks[1].slice(0,3)
+	                })
+	            ],
+	            decks: config.decks
 	        }
-	        return participants.alive;
+	        this.eventEmitter = new EventEmitter();
 
+
+	        console.log('hi', this.gameState.players[0].alive);
+	        while(!this.participants.died && this.gameState.round <= 40) {
+	            this.nextRound();
+
+	        }
+	        return this.participants.alive;
 	    }
 
 	    nextRound() {
-	        this.round++;
+	        this.gameState.round++;
+	        this.gameState.player = Math.abs(this.gameState.player-1);
+	        this.eventEmitter.pub(gameEvents.ROUND_START, {
+	            player: this.gameState.player
+	        });
+	    }
+
+	    participants() {
+	        return {
+	            died: !this.gameState.players[0].alive || !this.gameState.players[1].alive,
+	            alive: this.gameState.players[0].alive && this.gameState.players[1].alive,
+	        };
 	    }
 	};
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)(module)))
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
-
-	module.exports = function(module) {
-		if(!module.webpackPolyfill) {
-			module.deprecate = function() {};
-			module.paths = [];
-			// module.parent = undefined by default
-			module.children = [];
-			module.webpackPolyfill = 1;
-		}
-		return module;
-	}
-
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	
-
-/***/ },
-/* 4 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -123,7 +143,7 @@
 	];
 
 /***/ },
-/* 5 */
+/* 3 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -133,11 +153,11 @@
 	];
 
 /***/ },
-/* 6 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	const baseSet = __webpack_require__(7);
-	const CardSetTypes = __webpack_require__(8)
+	const baseSet = __webpack_require__(5);
+	const CardSetTypes = __webpack_require__(6)
 
 	module.exports = class{
 
@@ -157,7 +177,7 @@
 
 
 /***/ },
-/* 7 */
+/* 5 */
 /***/ function(module, exports) {
 
 	module.exports = [
@@ -209,12 +229,154 @@
 	];
 
 /***/ },
-/* 8 */
+/* 6 */
 /***/ function(module, exports) {
 
 	module.exports = {
 	    ALL: 'all',
 	    BASE: 'base'
+	};
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const Player = __webpack_require__(8);
+
+	module.exports = class extends Player {
+	    event (type, message) {
+	        //to be overwritten.
+	        console.log(type, message);
+	    }
+	}
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	const EventEmitter = __webpack_require__(10);
+	const gameEvents = __webpack_require__(13);
+
+	module.exports = class{
+
+	    constructor (gameState){
+
+	        this.gameState = gameState;
+	        this.eventEmitter = new EventEmitter();
+	        /*
+	        this.gameState = {
+	            health:30,
+	            deck:[],
+	            id:0
+	        }
+	        */
+
+	        const subIndex = this.eventEmitter.sub('all', function(type, message){
+
+	            switch(type){
+	                case gameEvents.GAME_END:
+	                    this.eventEmitter.unsub(subIndex);
+	                    break;
+	            }
+	            // if(message.id === this.gameState.id || !message.id){
+	            //     this.event(type, message);
+	            // }
+	            this.event(type, message);
+	        });
+
+	    }
+
+	    get alive() {
+	        return this.gameState.health > 0;
+	    }
+
+	    event (type, message) {
+	        //to be overwritten.
+	    }
+
+
+	};
+
+
+/***/ },
+/* 9 */,
+/* 10 */
+/***/ function(module, exports) {
+
+	let instance = null;
+
+	module.exports = class EventEmitter{
+
+	    constructor() {
+	        if(!instance){
+	              instance = this;
+	              this.init();
+	        }
+
+	        return instance;
+	     }
+
+	     init() {
+	         this.index = 0;
+	         this.subs = [];
+	     }
+
+	     sub(id, type, callback){
+
+	         const newIndex = this.index;
+	         this.subs.push({
+	             index: newIndex,
+	             id: id,
+	             type: type,
+	             callback: callback
+	         })
+	         this.index++;
+	         return newIndex;
+	     }
+
+	     unsub(index){
+	         const foundIndex = -1;
+	         for(let i; i < this.subs.length; i++) {
+	             if(index === this.subs[i].index){
+	                 foundIndex = i;
+	                 break;
+	             }
+	         }
+	         if(foundIndex > 0) {
+	             this.subs = this.subs.splice(foundIndex, 1);
+	         }
+	     }
+
+	     pub(type, message) {
+	         console.log('pub', 'type', 'message');
+	          for(let i; i < this.subs.length; i++) {
+	              if(type === this.subs[i].type || this.subs[i].type === 'all'){
+	                 this.subs[i].callback(message);
+	              }
+	          }
+	     }
+
+	}
+
+
+/***/ },
+/* 11 */,
+/* 12 */,
+/* 13 */
+/***/ function(module, exports) {
+
+	module.exports = {
+	    GAME_START: 'GAME_START',
+	    GAME_END: 'GAME_END',
+	    ROUND_START: 'ROUND_START',
+	    ROUND_END: 'ROUND_END',
+	    MULLIGAN_START: 'MULLIGAN_START',
+	    MULLIGAN_END: 'MULLIGAN_END',
+	    ATTACK: 'ATTACK',
+	    ATTACK_COMPLETE: 'ATTACK_COMPLETE'
+
 	};
 
 

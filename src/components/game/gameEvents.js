@@ -1,4 +1,4 @@
-module.exports = [
+module.exports = {
     GAME_START: 'GAME_START',
     GAME_END: 'GAME_END',
     ROUND_START: 'ROUND_START',
@@ -8,4 +8,4 @@ module.exports = [
     ATTACK: 'ATTACK',
     ATTACK_COMPLETE: 'ATTACK_COMPLETE'
 
-];
+};

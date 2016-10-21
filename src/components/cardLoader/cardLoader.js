@@ -1,5 +1,5 @@
 const baseSet = require('../../../data/cards/base/cards.json');
-const CardSetTypes = require('./cardSetTypes.js')
+const CardSetTypes = require('../types/cardSetTypes.js')
 
 module.exports = class{
 
