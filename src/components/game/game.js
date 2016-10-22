@@ -9,10 +9,12 @@ module.exports = class{
             player: 0,
             players: [
                 new config.players[0]({
+                    id: 0,
                     health: 30,
                     hand: config.decks[0].slice(0,3)
                 }),
                 new config.players[1]({
+                    id: 1,
                     health: 30,
                     hand: config.decks[1].slice(0,3)
                 })
@@ -21,12 +23,12 @@ module.exports = class{
         }
         this.eventEmitter = new EventEmitter();
 
-
-        console.log('hi', this.gameState.players[0].alive);
-        while(!this.participants.died && this.gameState.round <= 40) {
+        while(!this.participants.died && this.gameState.round < 40) {
             this.nextRound();
 
         }
+        this.eventEmitter.pub(gameEvents.GAME_END);
+
         return this.participants.alive;
     }
 

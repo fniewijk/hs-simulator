@@ -30,8 +30,8 @@ module.exports = class EventEmitter{
      }
 
      unsub(index){
-         const foundIndex = -1;
-         for(let i; i < this.subs.length; i++) {
+         let foundIndex = -1;
+         for(let i = 0; i < this.subs.length; i++) {
              if(index === this.subs[i].index){
                  foundIndex = i;
                  break;
@@ -43,10 +43,9 @@ module.exports = class EventEmitter{
      }
 
      pub(type, message) {
-         console.log('pub', 'type', 'message');
-          for(let i; i < this.subs.length; i++) {
+          for(let i = 0; i < this.subs.length; i++) {
               if(type === this.subs[i].type || this.subs[i].type === 'all'){
-                 this.subs[i].callback(message);
+                 this.subs[i].callback(type, message);
               }
           }
      }

@@ -15,17 +15,20 @@ module.exports = class{
         }
         */
 
-        const subIndex = this.eventEmitter.sub('all', function(type, message){
+        const eventFunction = this.event;
+        const eventEmitterFunction = this.eventEmitter;
+
+        const subIndex = this.eventEmitter.sub('player ' + this.gameState.id, 'all', function(type, message){
 
             switch(type){
                 case gameEvents.GAME_END:
-                    this.eventEmitter.unsub(subIndex);
+                    eventEmitterFunction.unsub(subIndex);
                     break;
             }
             // if(message.id === this.gameState.id || !message.id){
             //     this.event(type, message);
             // }
-            this.event(type, message);
+            eventFunction(type, message);
         });
 
     }
