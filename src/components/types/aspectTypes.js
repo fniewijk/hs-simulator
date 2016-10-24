@@ -1,5 +1,5 @@
 module.exports = {
-    DEAD: 'dead',
-    STEALTH: 'stealth',
-    IMMUNE: 'immune'
+    DEAD: 'DEAD',
+    STEALTH: 'STEALTH',
+    IMMUNE: 'IMMUNE'
 };
